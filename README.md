@@ -4,6 +4,7 @@ Reinforcement learning to handle uncertainties in renewable energy flux
 # Project Structure
 renewable_rl_optimization/
 │── data/                    # Store raw and processed datasets
+
 │── models/                  # Save trained models
 │── notebooks/               # Jupyter notebooks for exploration
 │── src/                     # Source code for RL and optimization
