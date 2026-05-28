@@ -31,7 +31,7 @@ env/
 htmlcov/
 
 # Pipeline artifacts
-outputs/
+#outputs/
 code/models/
 code/visualizations/
 *.safetensors
