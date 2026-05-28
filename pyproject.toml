@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "AI-Driven-Renewable-Energy-Optimization"
+version = "0.1.0"
+description = "Reinforcement learning to handle uncertainties in renewable energy flux."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+  { name = "Karim El-Sharkawy", email = "karimelsharkawy2002@gmail.com" }
+]
+dependencies = [
+  "numpy>=1.26",
+  "pandas>=2.2",
+  "scikit-learn>=1.5",
+  "PyYAML>=6.0",
+  "tqdm>=4.66",
+  "rich>=13.7",
+  "typer>=0.12",
+  "pydantic>=2.8",
+  "joblib>=1.4",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3",
+  "ruff>=0.6",
+  "black>=24.8",
+]
+
+[project.scripts]
+SelfCurate = "SelfCurate.cli:app"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
