@@ -3,36 +3,75 @@ requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "AI-Driven-Renewable-Energy-Optimization"
+name = "rl-optimization-ai"
 version = "0.1.0"
 description = "Reinforcement learning to handle uncertainties in renewable energy flux."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = {text = "MIT"}
 authors = [
-  { name = "Karim El-Sharkawy", email = "karimelsharkawy2002@gmail.com" }
+  { name = "Karim El-Sharkawy" }
 ]
 dependencies = [
+  # --- RL frameworks ---
+  "stable-baselines3>=2.3",
+  "gymnasium>=0.29",
+  "shimmy>=2.0",            # Gymnasium <-> SB3 compatibility
+
+  # --- Deep learning ---
+  "torch>=2.3",
+
+  # --- Data / numerics ---
   "numpy>=1.26",
   "pandas>=2.2",
-  "scikit-learn>=1.5",
-  "PyYAML>=6.0",
-  "tqdm>=4.66",
-  "rich>=13.7",
-  "typer>=0.12",
-  "pydantic>=2.8",
-  "joblib>=1.4",
+  "scipy>=1.13",
+
+  # --- Visualization ---
+  "matplotlib>=3.9",
+  "seaborn>=0.13",
+  "plotly>=5.24",
+
+  # --- Experiment tracking ---
+  "mlflow>=2.15",
+
+  # --- Database ---
+  "sqlalchemy>=2.0",
+  "psycopg2-binary>=2.9",
+  "alembic>=1.13",
+
+  # --- API ---
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.32",
+  "pydantic>=2.9",
+
+  # --- Config ---
+  "pyyaml>=6.0",
+  "python-dotenv>=1.0",
+
+  # --- Orchestration ---
+  "prefect>=3.0",
 ]
 
 [project.optional-dependencies]
 dev = [
   "pytest>=8.3",
+  "pytest-cov>=6.0",
   "ruff>=0.6",
-  "black>=24.8",
+]
+
+tune = [
+  "optuna>=4.0",
+  "ray[tune]>=2.35",
+]
+
+viz = [
+  "streamlit>=1.38",
 ]
 
 [project.scripts]
-SelfCurate = "SelfCurate.cli:app"
+rl-train = "training.trainer:main"
+rl-evaluate = "evaluation.evaluator:main"
+rl-tune = "training.tuner:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -40,12 +79,35 @@ package-dir = {"" = "src"}
 [tool.setuptools.packages.find]
 where = ["src"]
 
-[tool.black]
-line-length = 100
-
 [tool.ruff]
-line-length = 100
+line-length = 99
 target-version = "py310"
+extend-exclude = [".venv", "venv", "notebooks", "outputs"]
+
+[tool.ruff.lint]
+# Conservative ruleset: syntax errors, undefined names, unused imports, obvious bugs.
+select = ["E", "F", "W", "I"]
+ignore = [
+  #"E402",  # module-level import not at top of file
+  "E501",  # line length handled by formatter
+  "E731",  # allow lambda assignments
+  #"F841",  # local variable assigned but never used
+  "F405",  # may be undefined from star imports
+  "F403",  # star imports
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra --cov=src --cov-report=term-missing"
+pythonpath = ["src"]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*", "src/api/*"]
+
+#python -c "import tomllib; f=open('pyproject.toml','rb'); data=tomllib.load(f); print('\n'.join(data['project']['dependencies']))" > requirements.txt
